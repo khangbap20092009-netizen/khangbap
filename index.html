@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎄 Merry Christmas 🎄</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Segoe UI',Tahoma,sans-serif;
+  background:linear-gradient(135deg,#0f5132,#b11226);
+  color:#fff;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+.hero{
+  text-align:center;
+  padding:40px 20px;
+}
+
+.hero h1{
+  font-size:2.6rem;
+  text-shadow:0 4px 10px rgba(0,0,0,.4);
+}
+
+.hero p{
+  margin-top:10px;
+  font-size:1.2rem;
+  opacity:.9;
+}
+
+.question-section{
+  text-align:center;
+  margin-top:10px;
+}
+
+.question-label{
+  font-size:1.3rem;
+  font-weight:600;
+}
+
+.subjects-grid{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+  margin:20px;
+}
+
+.subject-btn{
+  padding:14px 26px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  font-size:1rem;
+  background:#fff;
+  color:#b11226;
+  font-weight:600;
+  box-shadow:0 6px 20px rgba(0,0,0,.3);
+  transition:.3s;
+}
+
+.subject-btn:hover{
+  transform:translateY(-5px) scale(1.05);
+}
+
+.subject-display{
+  max-width:600px;
+  margin:30px auto;
+  background:rgba(255,255,255,.95);
+  color:#333;
+  border-radius:18px;
+  padding:25px;
+  text-align:center;
+  display:none;
+  box-shadow:0 15px 35px rgba(0,0,0,.4);
+}
+
+.subject-display img{
+  width:100%;
+  max-width:400px;
+  border-radius:14px;
+  margin-bottom:15px;
+}
+
+.subject-message{
+  font-size:1.2rem;
+  line-height:1.7;
+}
+
+.falling{
+  position:fixed;
+  top:-50px;
+  font-size:26px;
+  animation:fall linear forwards;
+  pointer-events:none;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+    opacity:0;
+  }
+}
+
+.music-control{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:#fff;
+  color:#b11226;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(0,0,0,.4);
+}
+.start-music{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.start-box{
+  background:#fff;
+  color:#b11226;
+  padding:30px 40px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,.5);
+}
+
+.start-box h2{
+  margin-bottom:10px;
+}
+
+.start-box p{
+  margin-bottom:20px;
+}
+
+#startMusicBtn{
+  padding:12px 26px;
+  font-size:1.1rem;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  background:#b11226;
+  color:#fff;
+  font-weight:600;
+}
+
+</style>
+
+</head>
+
+<body>
+<div id="startMusicOverlay" class="start-music">
+  <div class="start-box">
+    <h2>🎄 Merry Christmas 🎄</h2>
+    <p>Bấm để bắt đầu & phát nhạc</p>
+    <button id="startMusicBtn">▶ Phát nhạc</button>
+  </div>
+</div>
+
+<div class="hero">
+  <h1>🎄 Merry Christmas 🎄</h1>
+  <p>Chúc bạn một mùa Giáng Sinh an lành & ấm áp</p>
+</div>
+
+<section class="question-section">
+  <div class="question-label">🎁 bạn tên gì......?</div>
+  <div class="subjects-grid" id="subjectsGrid"></div>
+</section>
+
+<div id="subjectDisplay" class="subject-display"></div>
+
+<audio id="backgroundMusic" loop>
+  <source src="music/noel.mp3" type="audio/mpeg">
+</audio>
+
+
+<div id="musicToggle" class="music-control">🎵</div>
+
+<script>
+  const subjects=[
+ {
+  name:'Nhân',
+  color:'#e63946',
+  image:'image/nhan.jpg',
+  messages:[
+    '🎄 Chúc Nhân một mùa Giáng Sinh an lành và hạnh phúc!',
+    '❄️ Merry Christmas! Mong mọi điều tốt đẹp đến với bạn.'
+  ]
+ },
+ {
+  name:'Vân',
+  color:'#2a9d8f',
+  image:'image/van.jpg',
+  messages:[
+    '🎁 Chúc Vân Noel thật ấm áp bên gia đình!',
+    '✨ Giáng Sinh vui vẻ và tràn đầy yêu thương!'
+  ]
+ },
+ {
+  name:'Tú',
+  color:'#f4a261',
+  image:'image/tu.jpg',
+  messages:[
+    '🎄 Chúc Tú một mùa Noel rực rỡ niềm vui!',
+    '❄️ Chúc bạn luôn cười thật tươi dịp Giáng Sinh!'
+  ]
+ },
+ {
+  name:'Vinh',
+  color:'#9b59b6',
+  image:'image/vinh.jpg',
+  messages:[
+    '🎁 Noel an lành và hạnh phúc nhé!',
+    '✨ Mong mọi điều may mắn đến với bạn!'
+  ]
+ },
+ {
+  name:'Trí',
+  color:'#3498db',
+  image:'image/tri.jpg',
+  messages:[
+    '🎄 Merry Christmas! Chúc bạn sức khỏe & thành công!',
+    '❄️ Giáng Sinh vui vẻ bên những người thân yêu!'
+  ]
+ },
+ {
+  name:'Anh',
+  color:'#e67e22',
+  image:'image/anh.jpg',
+  messages:[
+    '🎅 Noel ấm áp và nhiều kỷ niệm đẹp!',
+    '✨ Chúc bạn một mùa Giáng Sinh thật ý nghĩa!'
+  ]
+ },
+ {
+  name:'Ngân',
+  color:'#ff4d6d',
+  image:'image/ngan.jpg',
+  messages:[
+    '🎄 Ngân à, chúc bạn một mùa Giáng Sinh thật ấm áp, luôn có người quan tâm, yêu thương và ở bên những lúc cần nhất.',
+    '✨ Merry Christmas Ngân! Mong rằng mọi điều tốt đẹp nhất sẽ nhẹ nhàng tìm đến bạn, không chỉ trong Noel này mà cả những ngày sau.',
+    '🎁 Chúc Ngân luôn mỉm cười thật tươi, giữ được sự dịu dàng của riêng mình và đón một năm mới đầy hy vọng.'
+  ]
+ }
+];
+
+
+
+
+const grid=document.getElementById('subjectsGrid');
+const display=document.getElementById('subjectDisplay');
+
+subjects.forEach(s=>{
+ const b=document.createElement('button');
+ b.className='subject-btn';
+ b.textContent=s.name;
+ b.onclick=()=>show(s);
+ grid.appendChild(b);
+});
+
+function show(s){
+ display.style.display='block';
+ display.innerHTML=`
+  <img src="${s.image}">
+  <div class="subject-message">${s.messages[Math.floor(Math.random()*s.messages.length)]}</div>
+ `;
+ snow();
+}
+
+function snow(){
+ const icons=['❄️','🎄','🎁','⭐','✨'];
+ for(let i=0;i<30;i++){
+  const e=document.createElement('div');
+  e.className='falling';
+  e.textContent=icons[Math.floor(Math.random()*icons.length)];
+  e.style.left=Math.random()*100+'%';
+  e.style.animationDuration=(Math.random()*3+3)+'s';
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),6000);
+ }
+}
+
+const music=document.getElementById('backgroundMusic');
+const toggle=document.getElementById('musicToggle');
+
+toggle.onclick=()=>{
+ if(music.paused){music.play();toggle.textContent='🎵'}
+ else{music.pause();toggle.textContent='🔇'}
+};
+
+const startOverlay=document.getElementById('startMusicOverlay');
+const startBtn=document.getElementById('startMusicBtn');
+
+startBtn.onclick=()=>{
+  music.play();
+  toggle.textContent='🔊';
+  startOverlay.style.display='none';
+};
+
+</script>
+
+</body>
+</html>
